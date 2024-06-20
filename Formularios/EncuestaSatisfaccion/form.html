@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Evaluación</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Encuesta de satisfacción</h1>
+    <form action="procesar.php" method="post">
+        <fieldset>
+            <legend>Datos Generales de la Empresa</legend>
+            <label>Nombre y firma del evaluador: <input type="text" name="evaluador_nombre" required></label>
+            <label>Puesto: <input type="text" name="evaluador_puesto" required></label>
+            <label>Razón social de la Empresa/Institución: <input type="text" name="empresa_razon_social" required></label>
+            <label>Web de la empresa: <input type="url" name="empresa_web"></label>
+            <label>Fecha: <input type="date" name="fecha" required></label>
+            <label>Teléfono: <input type="tel" name="evaluador_telefono"></label>
+            <label>e-mail del evaluador: <input type="email" name="evaluador_email"></label>
+            <label>Proceso a evaluar: <input type="text" name="proceso_evaluar" required></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos Generales del Alumno</legend>
+            <label>Nombre: <input type="text" name="alumno_nombre" required></label>
+            <label>Matrícula: <input type="text" name="alumno_matricula" required></label>
+            <label>Firma: <input type="text" name="alumno_firma" required></label>
+            <label>Proyecto: <input type="text" name="alumno_proyecto" required></label>
+            <label>Teléfono: <input type="tel" name="alumno_telefono"></label>
+            <label>e-mail: <input type="email" name="alumno_email"></label>
+            <label>Nombre y firma del asesor interno: <input type="text" name="asesor_nombre_firma" required></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Evaluación del Cumplimiento del Perfil de Egreso</legend>
+            <label>Competencia 1: <input type="number" name="competencia_1" min="6" max="10" required></label>
+            <label>Competencia 2: <input type="number" name="competencia_2" min="6" max="10" required></label>
+            <label>Competencia 3: <input type="number" name="competencia_3" min="6" max="10" required></label>
+            <label>Competencia 4: <input type="number" name="competencia_4" min="6" max="10" required></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Evaluación del Campo Profesional y Ocupacional</legend>
+            <label>Competencia en que se encuentra capacitado</label>
+            <label>Diseño implementación y evaluación de plataformas tecnológicas: <input type="number" name="campo_calificacion" min="6" max="10" required></label>
+            <label>Administrar y mantener aplicaciones de TI <input type="number" name="campo_calificacion" min="6" max="10" required></label>
+            <label>Planificar, diseñar, desarrollar, implementar y evaluar los sistemas de información <input type="number" name="campo_calificacion" min="6" max="10" required></label>
+            <label>Evaluar la pertinencia, rentabilidad y factibilidad de un proyecto <input type="number" name="campo_calificacion" min="6" max="10" required></label>
+          <label>Otra: <input type="number" name="campo_calificacion" min="6" max="10" required></label>
+            <label>Área en la que se desempeñó en la Empresa/Institución:</label>
+            <input type="checkbox" name="area_desempeno[]" value="Ingeniero de Proyectos"> Ingeniero de Proyectos<br>
+            <input type="checkbox" name="area_desempeno[]" value="Ingeniero de Soporte Técnico"> Ingeniero de Soporte Técnico<br>
+            <input type="checkbox" name="area_desempeno[]" value="Asesor Técnico de Servicio y Análisis de Sistemas"> Asesor Técnico de Servicio y Análisis de Sistemas<br>
+            <input type="checkbox" name="area_desempeno[]" value="Administrador de Redes"> Administrador de Redes<br>
+            <input type="checkbox" name="area_desempeno[]" value="Consultor en Proyectos de TI"> Consultor en Proyectos de TI<br>
+            <input type="checkbox" name="area_desempeno[]" value="Mantenimiento y Supervisión de Equipos"> Mantenimiento y Supervisión de Equipos<br>
+            <input type="checkbox" name="area_desempeno[]" value="Diseño de Dispositivos y Herramientas Inteligentes"> Diseño de Dispositivos y Herramientas Inteligentes<br>
+            <input type="checkbox" name="area_desempeno[]" value="Otro"> Otro<br>
+        </fieldset>
+
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
