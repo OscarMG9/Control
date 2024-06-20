@@ -27,19 +27,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = isset($_POST['email']) ? $_POST['email'] : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    // Limpiar datos (opcional, dependiendo de la configuración de tu aplicación)
+    // Consulta SQL para verificar las credenciales del usuario en la tabla Administrador
+    $sql_admin = "SELECT * FROM Administrador WHERE correo = '$email' AND contrasena = '$password'";
+    $result_admin = $conn->query($sql_admin);
 
-    // Consulta SQL para verificar las credenciales del usuario
-    $sql = "SELECT * FROM administrador WHERE correo = '$email' AND contrasena = '$password'";
-    $result = $conn->query($sql);
+    // Consulta SQL para verificar las credenciales del usuario en la tabla AsesorInterno
+    $sql_asesor_interno = "SELECT * FROM AsesorInterno WHERE email = '$email' AND contrasena = '$password'";
+    $result_asesor_interno = $conn->query($sql_asesor_interno);
 
-    // Verificar si se encontraron resultados
-    if ($result && $result->num_rows > 0) {
-        // Inicio de sesión exitoso
+    // Consulta SQL para verificar las credenciales del usuario en la tabla AsesorExterno
+    $sql_asesor_externo = "SELECT * FROM AsesorExterno WHERE email = '$email' AND contrasena = '$password'";
+    $result_asesor_externo = $conn->query($sql_asesor_externo);
+
+    // Consulta SQL para verificar las credenciales del usuario en la tabla Asistente
+    $sql_asistente = "SELECT * FROM Asistente WHERE correo = '$email' AND contrasena = '$password'";
+    $result_asistente = $conn->query($sql_asistente);
+
+    // Verificar si se encontraron resultados y redirigir según el rol
+    if ($result_admin->num_rows > 0) {
+        // Inicio de sesión exitoso para administrador
         $_SESSION['loggedin'] = true;
         $_SESSION['email'] = $email;
-        // Redireccionar a la página de inicio
-        header('Location: inicio.php');
+        header('Location: administrador.php');
+        exit;
+    } elseif ($result_asesor_interno->num_rows > 0) {
+        // Inicio de sesión exitoso para asesor interno
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email;
+        header('Location: asesor_interno.php');
+        exit;
+    } elseif ($result_asesor_externo->num_rows > 0) {
+        // Inicio de sesión exitoso para asesor externo
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email;
+        header('Location: asesor_externo.php');
+        exit;
+    } elseif ($result_asistente->num_rows > 0) {
+        // Inicio de sesión exitoso para asistente
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email;
+        header('Location: asistente.php');
         exit;
     } else {
         // Inicio de sesión fallido
@@ -50,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
