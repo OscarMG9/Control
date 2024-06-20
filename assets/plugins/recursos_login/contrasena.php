@@ -1,6 +1,5 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 require '../../../PHPMailer/Exception.php';
@@ -21,28 +20,53 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
+// Variables para mensajes de éxito y error
+$envio = '';
+$error = '';
+$error2 = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recover-submit'])) {
     $email = $_POST['email'];
-    
-    // Buscar el correo en las tablas Administrador, AsesorInterno, AsesorExterno, Asistente
-    $query_admin = "SELECT correo FROM Administrador WHERE correo = '$email'";
-    $query_interno = "SELECT email FROM AsesorInterno WHERE email = '$email'";
-    $query_externo = "SELECT email FROM AsesorExterno WHERE email = '$email'";
-    $query_asistente = "SELECT correo FROM Asistente WHERE correo = '$email'";
-    
+
+    // Consultas SQL para buscar el correo y la contraseña en las tablas respectivas
+    $query_admin = "SELECT correo, contrasena FROM Administrador WHERE correo = '$email'";
+    $query_interno = "SELECT email, contrasena FROM AsesorInterno WHERE email = '$email'";
+    $query_externo = "SELECT email, contrasena FROM AsesorExterno WHERE email = '$email'";
+    $query_asistente = "SELECT correo, contrasena FROM Asistente WHERE correo = '$email'";
+
+    // Ejecutar consultas y verificar resultados
     $result_admin = $conn->query($query_admin);
     $result_interno = $conn->query($query_interno);
     $result_externo = $conn->query($query_externo);
     $result_asistente = $conn->query($query_asistente);
-    
-    if ($result_admin->num_rows > 0 || $result_interno->num_rows > 0 || $result_externo->num_rows > 0 || $result_asistente->num_rows > 0) {
-        // Si se encuentra el correo en alguna de las tablas, proceder con el envío del correo de recuperación
 
-        // Lógica para enviar el correo de recuperación usando PHPMailer
-        $mail = new PHPMailer(true);
+    if ($result_admin->num_rows > 0) {
+        $row = $result_admin->fetch_assoc();
+        $contrasena = $row['contrasena'];
+        $correo = $row['correo'];
+    } elseif ($result_interno->num_rows > 0) {
+        $row = $result_interno->fetch_assoc();
+        $contrasena = $row['contrasena'];
+        $correo = $row['email'];
+    } elseif ($result_externo->num_rows > 0) {
+        $row = $result_externo->fetch_assoc();
+        $contrasena = $row['contrasena'];
+        $correo = $row['email'];
+    } elseif ($result_asistente->num_rows > 0) {
+        $row = $result_asistente->fetch_assoc();
+        $contrasena = $row['contrasena'];
+        $correo = $row['correo'];
+    } else {
+        // Si el correo no se encuentra en ninguna tabla
+        $error2 = "Correo no encontrado.";
+    }
 
+    // Si se encontró el correo en alguna tabla, enviar correo de recuperación
+    if (isset($correo) && isset($contrasena)) {
         try {
-            // Configuración del servidor SMTP de Gmail
+            // Configuración del correo usando PHPMailer
+            $mail = new PHPMailer(true);
+
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
@@ -53,20 +77,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recover-submit'])) {
 
             // Configuración del correo
             $mail->setFrom('tiserviciosud4@gmail.com', 'SERVICIOS TI - UD4');
-            $mail->addAddress($email); // Correo del destinatario
+            $mail->addAddress($correo); // Correo del destinatario
             $mail->isHTML(true);
-            $mail->Subject = 'Recuperacion de contraseña';
-            $mail->Body = 'Aquí va el contenido del correo de recuperación';
+            $mail->Subject = '=?UTF-8?B?' . base64_encode('Recuperación de Contraseña') . '?=';
 
-            // Envío del correo
+            // Cuerpo del correo con la contraseña recuperada
+            $mail->Body = '
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Recuperación de contraseña</title>
+                    <style>
+                        /* Estilos CSS */
+                        body {
+                            font-family: Arial, sans-serif;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>SERVICIOS TI - UD4</h2>
+                    <p>Usted ha realizado una recuperación de contraseña.</p>
+                    <p>Su contraseña es: <strong>' . $contrasena . '</strong></p>
+                    <p>Gracias por su preferencia. (No responda a este mensaje)</p>
+                    <a href="#!">&copy; 2024 / Los tifones de Tucana</a>
+                </body>
+                </html>
+            ';
+
+            // Enviar el correo electrónico
             $mail->send();
             $envio = "Contraseña enviada.";
-            
         } catch (Exception $e) {
-            $error = "Error al enviar el correo.";}
-    } else {
-        // Si el correo no se encuentra en ninguna tabla
-        $error2 = "Correo no encontrado.";}
+            $error = "Error al enviar el correo.";
+        }
+    }
 }
 
 // Cerrar conexión a la base de datos
@@ -107,24 +153,23 @@ $conn->close();
                                     <input type="email" name="email" id="email" class="form-control" placeholder="Correo electrónico" required>
                                 </div>
 
-                                <?php if (isset($envio)): ?>
+                                <?php if (!empty($envio)): ?>
                                     <div class="alert alert-success" role="alert">
                                         <?php echo $envio; ?>
                                     </div>
                                 <?php endif; ?>
 
-                                <?php if (isset($error)): ?>
+                                <?php if (!empty($error)): ?>
                                     <div class="alert alert-warning" role="alert">
                                         <?php echo $error; ?>
                                     </div>
                                 <?php endif; ?>
 
-                                <?php if (isset($error2)): ?>
+                                <?php if (!empty($error2)): ?>
                                     <div class="alert alert-danger" role="alert">
                                         <?php echo $error2; ?>
                                     </div>
                                 <?php endif; ?>
-
 
                                 <input name="recover-submit" id="recover-submit" class="btn btn-block login-btn mb-4" type="submit" value="Enviar">
                             </form>
