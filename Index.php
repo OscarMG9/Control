@@ -1,12 +1,6 @@
 <?php
 session_start(); // Iniciar sesión (si no está iniciada)
 
-// Verificar si ya hay una sesión iniciada, redirigir a inicio.php si es así
-if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-    header('Location: inicio.php');
-    exit;
-}
-
 // Verificar si se enviaron los datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Datos de conexión a la base de datos
@@ -48,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Inicio de sesión exitoso para administrador
         $_SESSION['loggedin'] = true;
         $_SESSION['email'] = $email;
-        header('Location: administrador.php');
+        header('Location: dashboard/design/index_admin.php');
         exit;
     } elseif ($result_asesor_interno->num_rows > 0) {
         // Inicio de sesión exitoso para asesor interno
