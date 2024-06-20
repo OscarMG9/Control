@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Limpiar datos (opcional, dependiendo de la configuración de tu aplicación)
 
     // Consulta SQL para verificar las credenciales del usuario
-    $sql = "SELECT * FROM Administrador WHERE correo = '$email' AND contraseña = '$password'";
+    $sql = "SELECT * FROM administrador WHERE correo = '$email' AND contrasena = '$password'";
     $result = $conn->query($sql);
 
     // Verificar si se encontraron resultados
