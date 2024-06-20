@@ -10,14 +10,23 @@
       color: red;
       font-size: 0.875em;
     }
+    .fondo{
+      background-color: #A61B0F;
+    }
+    .boton:hover{
+      background-color: #730606;
+    }
+    .boton{
+      border-radius: 50px;
+    }
   </style>
 </head>
 <body>
-  <div class="container mt-5">
+<div class="container mt-5 ">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="card">
-          <div class="card-header bg-primary text-white text-center">
+        <div class="card shadow-lg p-3 mb-5 bg-body-tertiary r-5">
+          <div class="card-header text-white text-center fondo">
             <h4>Registro de Estudiante</h4>
           </div>
           <div class="card-body">
@@ -72,12 +81,12 @@
                 <input type="text" class="form-control" id="asesorInterno" placeholder="Ingrese el nombre del asesor interno">
                 <div class="error" id="asesorInternoError"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group mb-5">
                 <label for="asesorExterno">Asesor Externo</label>
                 <input type="text" class="form-control" id="asesorExterno" placeholder="Ingrese el nombre del asesor externo">
                 <div class="error" id="asesorExternoError"></div>
               </div>
-              <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+              <button type="submit" class="fondo boton text-light btn-danger btn-block">Registrar</button>
             </form>
           </div>
         </div>
