@@ -10,15 +10,25 @@
       color: red;
       font-size: 0.875em;
     }
+    .fondo{
+      background-color: #A61B0F;
+    }
+    .boton:hover{
+      background-color: #730606;
+    }
+    .boton{
+      border-radius: 50px;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container mt-5">
+  <div class="container mt-5 ">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="card">
-          <div class="card-header bg-primary text-white text-center">
-            <h4>Registro de Empleado</h4>
+        <div class="card shadow-lg p-3 mb-5 bg-body-tertiary r-5">
+          <div class="card-header text-white text-center fondo">
+            <h4>Registro Asesor Externo</h4>
           </div>
           <div class="card-body">
             <form id="registroForm">
@@ -57,12 +67,12 @@
                 <input type="password" class="form-control" id="contrasena" placeholder="Ingrese su contraseña">
                 <div class="error" id="contrasenaError"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group mb-5">
                 <label for="urlWeb">URL de su web</label>
                 <input type="url" class="form-control" id="urlWeb" placeholder="Ingrese la URL de su web">
                 <div class="error" id="urlWebError"></div>
               </div>
-              <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+              <button type="submit" class="fondo boton text-light btn-danger btn-block">Registrar</button>
             </form>
           </div>
         </div>
